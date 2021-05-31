@@ -43,7 +43,8 @@ def index():
             
             user_data = records.find_one({"email": email})
             new_email = user_data['email']
-   
+
+            session["email"] = new_email
             return render_template('logged_in.html', email=new_email)
     return render_template('index.html')
 
