@@ -7,11 +7,11 @@ app = Flask(__name__)
 app.secret_key = "testing"
 # Database
 client = pymongo.MongoClient("mongodb+srv://ChrisRivas:mongodbpassword@testcluster.aurrw.mongodb.net/Restaurant_Rater_Users?retryWrites=true&w=majority", 27017)
-# db = client["database_name"]
-# collection = db["first_collection"]
 
 db = client.get_database('Restaurant_Rater_Users')
 records = db.register
+groups = db.groups
+
 
 @app.route("/", methods=['post', 'get'])
 def index():
@@ -95,6 +95,40 @@ def logout():
     else:
         return render_template('index.html')
 
+
+@app.route("/groups", methods=["POST", "GET"])
+def create_group():
+    message = ''
+    if "email" in session:
+        email = session["email"]
+        if request.method == "POST":
+            group = request.form.get("groupname")
+            group_found = groups.find_one({"groupname": group})
+            if group_found:
+                message = 'There already is a group by that name'
+                return render_template('groups.html', message=message, email=email)
+            else:
+                new_group = {'groupname': group, 'groupadmin': email, 'memebers': [email]}
+                groups.insert_one(new_group)
+
+                new_group = groups.find_one({"groupname": group})
+                session["group"] = group
+            return render_template('index.html', email=email)
+        return render_template('groups.html', email=email)
+    else:
+        message = 'You must log in first'
+        return render_template('login.html', message=message)
+
+@app.route("/mygroups", methods=["POST", "GET"])
+def my_group():
+    message = ''
+    if "email" in session:
+        email = session["email"]
+        group_found = groups.find_all({"groupname": group})
+    return render_template("my_groups.html", email=email)
+
+
 #end of code to run it
+
 if __name__ == "__main__":
   app.run()
