@@ -8,6 +8,8 @@
     </div>
 {% endif %}
 <h1>My Groups</h1>
-
+{% for item in user_groups %}
+        <li><a href="{{ item.href }}">{{ item.groupname }}</a></li>
+{% endfor %}
 
 {% endblock %}

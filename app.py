@@ -1,4 +1,5 @@
 
+from unicodedata import name
 from flask import Flask, render_template, request, url_for, redirect, session
 import pymongo
 import bcrypt
@@ -124,8 +125,9 @@ def my_group():
     message = ''
     if "email" in session:
         email = session["email"]
-        group_found = groups.find_all({"groupname": group})
-    return render_template("my_groups.html", email=email)
+        user_groups = list(groups.find({"groupadmin": email}, {"groupname"}))
+        print(user_groups)
+    return render_template("my_groups.html", email=email, user_groups=user_groups)
 
 
 #end of code to run it
