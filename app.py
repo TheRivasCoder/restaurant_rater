@@ -3,12 +3,26 @@ from unicodedata import name
 from flask import Flask, render_template, request, url_for, redirect, session
 import pymongo
 import bcrypt
+from dotenv import load_dotenv
+from os import environ
 
-app = Flask(__name__)
-app.secret_key = "testing"
-# Database
-client = pymongo.MongoClient("mongodb+srv://ChrisRivas:mongodbpassword@testcluster.aurrw.mongodb.net/Restaurant_Rater_Users?retryWrites=true&w=majority", 27017)
+def get_database_client(flask_app):
+    # Database
+    client = pymongo.MongoClient(flask_app.config['DB_URI'], flask_app.config['DB_PORT'])
+    return client
 
+def create_app():
+    load_dotenv('.env')
+    app = Flask(__name__)
+    app.secret_key = environ.get("SECRET_KEY")
+    app.config['DB_URI'] = environ.get('DB_URI')
+    app.config['DB_PORT'] = int(environ.get('DB_PORT'))
+    return app
+
+app = create_app()
+# db = client["database_name"]
+# collection = db["first_collection"]
+client = get_database_client(app)
 db = client.get_database('Restaurant_Rater_Users')
 records = db.register
 groups = db.groups
@@ -22,10 +36,10 @@ def index():
     if request.method == "POST":
         user = request.form.get("fullname")
         email = request.form.get("email")
-        
+
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
-        
+
         user_found = records.find_one({"name": user})
         email_found = records.find_one({"email": email})
         if user_found:
@@ -41,7 +55,7 @@ def index():
             hashed = bcrypt.hashpw(password2.encode('utf-8'), bcrypt.gensalt())
             user_input = {'name': user, 'email': email, 'password': hashed}
             records.insert_one(user_input)
-            
+
             user_data = records.find_one({"email": email})
             new_email = user_data['email']
 
@@ -68,12 +82,12 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
 
-       
+
         email_found = records.find_one({"email": email})
         if email_found:
             email_val = email_found['email']
             passwordcheck = email_found['password']
-            
+
             if bcrypt.checkpw(password.encode('utf-8'), passwordcheck):
                 session["email"] = email_val
                 return redirect(url_for('logged_in'))
