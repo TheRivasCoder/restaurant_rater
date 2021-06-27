@@ -1,6 +1,6 @@
 
 version: 0.0
-os: ubuntu
+os: linux
 files:
   - source: /app.py
     destination: /home/ubuntu/helloworld
