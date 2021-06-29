@@ -4,3 +4,5 @@ os: linux
 files:
   - source: /app.py
     destination: /home/ubuntu/
+  - source: /templates
+    destination: /home/ubuntu/templates/
