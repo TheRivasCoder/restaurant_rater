@@ -5,4 +5,4 @@ files:
   - source: /app.py
     destination: /home/ubuntu/restaurantrater/
   - source: /templates
-    destination: /home/ubuntu/restaurantrater/
+    destination: /home/ubuntu/restaurantrater/templates
