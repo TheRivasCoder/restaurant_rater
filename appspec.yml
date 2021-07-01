@@ -3,4 +3,6 @@ version: 0.0
 os: linux
 files:
   - source: /app.py
-    destination: /home/ubuntu/
+    destination: /home/ubuntu/restaurantrater/
+  - source: /templates  
+    destination: /home/ubuntu/restaurantrater/
