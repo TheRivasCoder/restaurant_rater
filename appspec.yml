@@ -6,3 +6,9 @@ files:
     destination: /home/ubuntu/restaurantrater/
   - source: /templates
     destination: /home/ubuntu/restaurantrater/templates
+hook:
+ AfterInstall:
+    - location: scripts/install_dependencies
+      timeout: 300
+      runas: root
+ 
