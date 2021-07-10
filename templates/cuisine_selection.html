@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Rate the cusine{% endblock %}
+
+{% block content %}
+<div class="text-center font-weight-bold"">Hello {{ data.email }}, how do you like the following cuisines</div>
+
+<div class="table-responsive-md px-4">
+<table class="table">
+    <tbody>
+    {% for cuisine in data.cuisine_info: %}
+    <tr>
+        <td>{{ cuisine[1] }}</td>
+    </tr>
+    <tr>
+        <td>{{ cuisine[2] }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}
