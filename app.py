@@ -8,8 +8,13 @@ from os import environ
 
 def get_database_client(flask_app):
     # Database
-    client = pymongo.MongoClient(flask_app.config['DB_URI'], flask_app.config['DB_PORT'])
+    client = pymongo.MongoClient("mongodb+srv://ChrisRivas:mongodbpassword@testcluster.aurrw.mongodb.net/Restaurant_Rater_Users?retryWrites=true&w=majority", 27017)
+
+    # client = pymongo.MongoClient(flask_app.config['DB_URI'], flask_app.config['DB_PORT'])
     return client
+
+db = client.get_database('Restaurant_Rater_Users')
+records = db.register
 
 def create_app():
     load_dotenv('.env')
