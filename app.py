@@ -10,6 +10,7 @@ def get_database_client(flask_app):
     # Database
     client = pymongo.MongoClient(flask_app.config['DB_URI'], flask_app.config['DB_PORT'])
     return client
+    
 
 def create_app():
     load_dotenv('.env')
