@@ -11,9 +11,6 @@ def get_database_client(flask_app):
     client = pymongo.MongoClient(flask_app.config['DB_URI'], flask_app.config['DB_PORT'])
     return client
 
-db = client.get_database('Restaurant_Rater_Users')
-records = db.register
-
 def create_app():
     load_dotenv('.env')
     app = Flask(__name__)
@@ -23,11 +20,13 @@ def create_app():
     return app
 
 app = create_app()
+# db = client["database_name"]
+# collection = db["first_collection"]
 client = get_database_client(app)
 db = client.get_database('Restaurant_Rater_Users')
 records = db.register
 groups = db.groups
-cusines = db.cuisines
+
 
 @app.route("/", methods=['post', 'get'])
 def index():
@@ -144,19 +143,6 @@ def my_group():
         print(user_groups)
     return render_template("my_groups.html", email=email, user_groups=user_groups)
 
-@app.route("/cuisines", methods=["GET"])
-def onboard():
-    if "email" in session:
-        email = session["email"]
-
-    data = {"email": email}
-
-    cuisine_info = []
-    for document in cusines.find():
-        cuisine_info.append([document['_id'], document['title'], document['description']])
-
-    data['cuisine_info'] = cuisine_info
-    return render_template('cuisine_selection.html', data=data)
 
 #end of code to run it
 
